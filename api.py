@@ -90,7 +90,7 @@ def handle_dialog(req, res):
         dispatcher = {'find_medicine': find_medicine, "add_recipe": add_recipe}
         #logging.info('command: %r \n',command)
         #logging.info('dispatcher: %r \n', dispatcher)
-        text = call_func(request, user_id, database, command, dispatcher)
+        text = call_func(request, user_id, database, command,conn, dispatcher)
         if text != None:
             res['response']['text'] = text
 
@@ -210,17 +210,16 @@ def get__skill(conn, id_parents, template):
 
 
 #авторизуем врача (guid_prov) и пациента (text - номер полиса)
-def add_recipe(text, guid_prov, database):
-    conn = sqlite3.connect(database)
-    cursor = conn.cursor()
-    data = [(None, text,guid_prov)]
-    cursor.executemany("INSERT INTO recipe VALUES (?,?,?)", data)
-    conn.commit()
+def add_recipe(text, guid_prov, conn, database):
+    with conn:
+        cursor = conn.cursor()
+        data = [(None, text,guid_prov)]
+        cursor.execute("INSERT INTO recipe VALUES (?,?,?)", data)
+        conn.commit()
     return None
 
 
-def find_medicine(text, guid_prov, database):
-    conn = sqlite3.connect("project.db")
+def find_medicine(text, guid_prov, conn, database):
     cursor = conn.cursor()
     sql="SELECT id_recipe FROM recipe"
     cursor.execute(sql)
@@ -253,9 +252,9 @@ def find_medicine(text, guid_prov, database):
     return response
 
 
-def call_func(text, user_id, database, func, dispatcher):
+def call_func(text, user_id, database, func,conn, dispatcher):
     try:
-        return dispatcher[func](text, user_id, database)
+        return dispatcher[func](text, user_id,conn, database)
     except Exception as e:
         logging.error('Error at %s', 'division', exc_info=e)
         return logging.exception('')

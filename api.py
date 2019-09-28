@@ -7,6 +7,7 @@ import datetime
 import json
 import logging
 import sqlite3
+import random
 
 # Импортируем подмодули Flask для запуска веб-сервиса.
 from flask import Flask, request
@@ -77,15 +78,19 @@ def handle_dialog(req, res):
         button = skill[1].split(',')
         #logging.info('button: %r \n', button)
         id_skill = str(skill[2])
-        logging.info('skill: %r \n', skill)
+        #logging.info('skill: %r \n', skill)
         command = skill[4]
-        logging.info('commanda: %r \n', command)
+        #logging.info('commanda: %r \n', command)
 
     sessionStorage[user_id] = {
         'suggests': button
     }
 
     res['response']['text'] = response
+
+    if command != '':
+        dispatcher = {'add': add}
+        res['response']['text'] = call_func("hi", 'add', dispatcher)
 
     # Создание кнопок
     res['response']['buttons'] = get_suggests(user_id)
@@ -97,104 +102,6 @@ def handle_dialog(req, res):
         logging.info('message: %r \n', message)
         create_message(conn, message)
     return
-    #
-    #     # try:
-    #     #     curmessage.execute("SELECT * FROM messages WHERE session_id = ? ORDER BY message_id DESC LIMIT 1",(session_id))
-    #     #     result = curmessage.fetchall()
-    #     # except sqlite3.DatabaseError as err:
-    #     #     logging.info("Error: %r", err)
-    #     # else:
-    #     #     conn.commit()
-    #
-    # if results[0] == "ваше имя":
-    #     res['response']['text'] = 'Ваша фамилия'
-    #     # create a database connection
-    #     with conn:
-    #         # create a new teacher
-    #         teachers = (request, user_id)
-    #         create_teacher(conn, teachers)
-    #         message.append(res['response']['text'])
-    #         create_message(conn, message)
-    #
-    #     return
-    #
-    # if results[0] == "ваше фамилия":
-    #     res['response']['text'] = 'Ваша фамилия'
-    #     # create a database connection
-    #     with conn:
-    #         # create a new teacher
-    #         teachers = (request, user_id)
-    #         create_teacher(conn, teachers)
-    #         message.append(res['response']['text'])
-    #         create_message(conn, message)
-    #     return
-    #
-    # if results[0] == "ваше отчество":
-    #     res['response']['text'] = 'Ваша фамилия'
-    #     # create a database connection
-    #     with conn:
-    #         # create a new teacher
-    #         teachers = (request, user_id)
-    #         create_teacher(conn, teachers)
-    #         message.append(res['response']['text'])
-    #         create_message(conn, message)
-    #
-    #     return
-    #
-    # if req['request']['original_utterance'].lower() in [
-    #     'зарегистрироваться',
-    #     'регистрация'
-    # ]:
-    #     res['response']['text'] = 'Вы учитель или родитель?'
-    #     sessionStorage[user_id] = {
-    #         'suggests': [
-    #             "учитель",
-    #             "родитель"
-    #         ]
-    #     }
-    #     res['response']['buttons'] = get_suggests(user_id)
-    #     message.append(res['response']['text'])
-    #     with conn:
-    #         create_message(conn, message)
-    #     return
-    #
-    # if req['request']['original_utterance'].lower() in [
-    #     'учитель',
-    #     'я преподаватель',
-    #     'преподаватель',
-    #     'педагог',
-    #     'тренер',
-    #     'я тренер',
-    #     'я преподаватель'
-    # ]:
-    #     res['response']['text'] = 'Ваше имя'
-    #     message.append(res['response']['text'])
-    #     with conn:
-    #         create_message(conn, message)
-    #     return
-    #
-    #
-    #
-    # # Пользователь хочет выйти из навыка
-    # if req['request']['original_utterance'].lower() in [
-    #     'закрыть',
-    #     'выйти',
-    # ]:
-    #     res['response']['text'] = 'Сессия убита'
-    #     res['response']['end_session'] = True
-    #     message.append(res['response']['text'])
-    #     with conn:
-    #         create_message(conn, message)
-    #     return
-    #
-    # # Если нет, то убеждаем его купить слона!
-    # res['response']['text'] = 'Все говорят "%s", а ты купи слона!' % (
-    #     req['request']['original_utterance']
-    # )
-    # message.append(res['response']['text'])
-    # with conn:
-    #     create_message(conn, message)
-    # res['response']['buttons'] = get_suggests(user_id)
 
 
 # Функция возвращает подсказки для ответа.
@@ -300,18 +207,60 @@ def get__skill(conn, id_parents, template):
             return element
 
 
-#def find_medicine(text,id_rec):
- #   conn = sqlite3.connect("project.db")
- #   cursor = conn.cursor()
-#
- #   jsonfile=open('lp2019.json','r',encoding='utf_8_sig')
-  #  l=text.split()
-   # for stroka in json.load(jsonfile):
-    #   if stroka['MNN'] in l:
-     #      print (stroka['Price'])
-      #     product = [(None, stroka["Barcode"],id_rec, stroka['MNN'],
-       #           stroka['Count'], stroka['Price'],stroka['ReleaseForm'])]
-        #   cursor.executemany("INSERT INTO recipe_product VALUES (?,?,?,?,?,?,?)", product)
-         #  conn.commit()
-          # break
+#авторизуем врача (guid_prov) и пациента (text - номер полиса)
+def add_recipe(text, guid_prov, database):
+    conn = sqlite3.connect(database)
+    cursor = conn.cursor()
+    data = [(None, text,guid_prov)]
+    cursor.executemany("INSERT INTO recipe VALUES (?,?,?)", data)
+    conn.commit()
 
+
+def find_medicine(text, guid_prov, database):
+    conn = sqlite3.connect(database)
+    cursor = conn.cursor()
+    sql="SELECT id_recipe FROM recipe"
+    cursor.execute(sql)
+    #возвращаем id_rec из таблицы id_recipe
+    id_rec=cursor.fetchall()[-1][0]
+    jsonfile=open('lp2019.json','r',encoding='utf_8_sig')
+    l=text.split()
+    fl=True
+    sum=0
+    for stroka in json.load(jsonfile):
+        #Если название препарата есть в списке сказанных слов
+            if stroka['MNN'] in l:
+               #удаляем пробелы, меняем запятые на точки
+               sum+=float(stroka['Price'].replace(' ','').replace(',','.'))
+               #пишем новую строчку в базу
+               product = [(None, stroka["Barcode"],id_rec, stroka['MNN'],
+                      stroka['Count'], stroka['Price'],stroka['ReleaseForm'],text)]
+               cursor.executemany("INSERT INTO recipe_product VALUES (?,?,?,?,?,?,?,?)", product)
+               conn.commit()
+               #удаляем название препарата
+               l.remove(stroka['MNN'])
+               fl=False
+    if fl:
+        answer=['Не знаю такого лекарства. Может подорожник?',
+            'Не знаком с таким препаратом. Повторите, пожалуйста!',
+            'Не расслышал название препарата. Давайте поцелую и всё пройдёт!']
+        response=random.choice(answer)
+    else:
+        response=('Сумма вашего заказа ориентировочно '+str(sum*1.1))
+    return response
+
+
+def pwr(text):
+    return text+"d"
+
+
+def add(text):
+    return text+"r"
+
+
+
+def call_func(text, func, dispatcher):
+    try:
+        return dispatcher[func](text)
+    except:
+        return "Invalid function"

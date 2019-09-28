@@ -56,7 +56,7 @@ def handle_dialog(req, res):
     button = ''
     id_parents = ''
     id_skill = ''
-    commanda = ''
+    command = ''
     database = "../gosyslyga/project.db"
     logging.info('work: %r \n', "work")
 
@@ -78,8 +78,8 @@ def handle_dialog(req, res):
         #logging.info('button: %r \n', button)
         id_skill = str(skill[2])
         #logging.info('skill: %r \n', skill)
-        #commanda = skill[3]
-        logging.info('commanda: %r \n', skill)
+        command = skill[3]
+        logging.info('commanda: %r \n', command)
 
     sessionStorage[user_id] = {
         'suggests': button
@@ -282,7 +282,7 @@ def get__skill(conn, id_parents, template):
 
     curskill = conn.cursor()
     curskill.execute(
-        "SELECT response, button, id_logic, template FROM logic_skill WHERE id_parents = ? ",
+        "SELECT response, button, id_logic, template, command FROM logic_skill WHERE id_parents = ? ",
         (id_parents, ))
     spisok = curskill.fetchall()
 

@@ -284,7 +284,7 @@ def get__skill(conn, id_parents, template):
     curskill.execute(
         "SELECT response, button, id_logic, template FROM logic_skill WHERE id_parents = ? ",
         (id_parents, ))
-    spisok = curskill.fetchall();
+    spisok = curskill.fetchall()
 
     if len(spisok) == 1:
         return spisok[0]

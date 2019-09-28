@@ -229,7 +229,7 @@ def find_medicine(text, guid_prov, conn, database):
     l=text.split()
     fl=True
     sum=0
-    for stroka in json.load(jsonfile):
+    for stroka in json.loads(jsonfile):
         #Если название препарата есть в списке сказанных слов
             if stroka['MNN'] in l:
                #удаляем пробелы, меняем запятые на точки

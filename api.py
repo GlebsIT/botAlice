@@ -232,6 +232,8 @@ def find_medicine(text, guid_prov, database):
     l=text.split()
     fl=True
     sum=0
+    return "ok"
+
     for stroka in json.load(jsonfile):
         #Если название препарата есть в списке сказанных слов
             if stroka['MNN'] in l:

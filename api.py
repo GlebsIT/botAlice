@@ -259,4 +259,5 @@ def call_func(text, user_id, database, func, dispatcher):
     try:
         return dispatcher[func](text, user_id, database)
     except:
+        logging.exception('')
         return "Invalid function"

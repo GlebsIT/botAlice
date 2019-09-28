@@ -230,11 +230,12 @@ def find_medicine(text, guid_prov, database):
     id_rec = cursor.fetchall()[-1][0]
 
     jsonfile = open('lp2019.json', 'r', encoding='utf_8_sig')
+    return "test"
     logging.info('log232: %r \n', id_rec)
     l = text.split()
     fl = True
     sum = 0
-    return "test"
+
     for stroka in json.load(jsonfile):
         # Если название препарата есть в списке сказанных слов
         if stroka['MNN'] in l:

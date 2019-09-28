@@ -92,7 +92,9 @@ def handle_dialog(req, res):
         dispatcher = {'find_medicine': find_medicine, "add_recipe": add_recipe}
         #logging.info('command: %r \n',command)
         #logging.info('dispatcher: %r \n', dispatcher)
-        res['response']['text'] = call_func(request, user_id, database, command, dispatcher)
+        text = call_func(request, user_id, database, command, dispatcher)
+        if text != None:
+            res['response']['text'] = text
 
     # Создание кнопок
     res['response']['buttons'] = get_suggests(user_id)
@@ -216,6 +218,7 @@ def add_recipe(text, guid_prov, database):
     data = [(None, text,guid_prov)]
     cursor.executemany("INSERT INTO recipe VALUES (?,?,?)", data)
     conn.commit()
+    return None
 
 
 def find_medicine(text, guid_prov, database):

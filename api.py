@@ -57,6 +57,7 @@ def handle_dialog(req, res):
     button = ''
     id_parents = ''
     id_skill = ''
+    commanda = ''
 
     conn = create_connection(database)
     message = [user_id, req['session']['message_id'], req['session']['session_id'],
@@ -73,9 +74,11 @@ def handle_dialog(req, res):
     if skill != None:
         response = skill[0]
         button = skill[1].split(',')
-        logging.info('button: %r \n', button)
+        #logging.info('button: %r \n', button)
         id_skill = str(skill[2])
-        logging.info('skill: %r \n', skill)
+        #logging.info('skill: %r \n', skill)
+        commanda = skill[3]
+        logging.info('commanda: %r \n', skill)
 
     sessionStorage[user_id] = {
         'suggests': button
@@ -278,7 +281,7 @@ def get__skill(conn, id_parents, template):
 
     curskill = conn.cursor()
     curskill.execute(
-        "SELECT response, button, id_logic, template FROM logic_skill WHERE id_parents = ? ",
+        "SELECT response, button, id_logic, template, command FROM logic_skill WHERE id_parents = ? ",
         (id_parents, ))
     spisok = curskill.fetchall();
 

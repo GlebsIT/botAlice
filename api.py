@@ -76,11 +76,11 @@ def handle_dialog(req, res):
     if skill != None:
         response = skill[0]
         button = skill[1].split(',')
-        # logging.info('button: %r \n', button)
+        #logging.info('button: %r \n', button)
         id_skill = str(skill[2])
-        # logging.info('skill: %r \n', skill)
+        #logging.info('skill: %r \n', skill)
         command = skill[4]
-        # logging.info('commanda: %r \n', command)
+        #logging.info('commanda: %r \n', command)
 
     sessionStorage[user_id] = {
         'suggests': button
@@ -90,8 +90,8 @@ def handle_dialog(req, res):
 
     if command != '':
         dispatcher = {'find_medicine': find_medicine, "add_recipe": add_recipe}
-        # logging.info('command: %r \n',command)
-        # logging.info('dispatcher: %r \n', dispatcher)
+        #logging.info('command: %r \n',command)
+        #logging.info('dispatcher: %r \n', dispatcher)
         text = call_func(request, user_id, database, command, dispatcher)
         if text != None:
             res['response']['text'] = text
@@ -194,7 +194,7 @@ def get__skill(conn, id_parents, template):
     curskill = conn.cursor()
     curskill.execute(
         "SELECT response, button, id_logic, template, command FROM logic_skill WHERE id_parents = ? ",
-        (id_parents,))
+        (id_parents, ))
     spisok = curskill.fetchall()
 
     if len(spisok) == 1:
@@ -211,63 +211,64 @@ def get__skill(conn, id_parents, template):
             return element
 
 
-# авторизуем врача (guid_prov) и пациента (text - номер полиса)
+#авторизуем врача (guid_prov) и пациента (text - номер полиса)
 def add_recipe(text, guid_prov, database):
     conn = sqlite3.connect(database)
     cursor = conn.cursor()
-    data = [(None, text, guid_prov)]
+    data = [(None, text,guid_prov)]
     cursor.executemany("INSERT INTO recipe VALUES (?,?,?)", data)
     conn.commit()
     return None
 
 
 def find_medicine(text, guid_prov, database):
+
     conn = sqlite3.connect(database)
     cursor = conn.cursor()
-    sql = "SELECT id_recipe FROM recipe"
+    sql="SELECT id_recipe FROM recipe"
     cursor.execute(sql)
-    # возвращаем id_rec из таблицы id_recipe
-    id_rec = cursor.fetchall()[-1][0]
+    #возвращаем id_rec из таблицы id_recipe
+    id_rec=cursor.fetchall()[-1][0]
 
-    jsonfile = open('lp2019.json', 'r', encoding='utf_8_sig')
+    jsonfile=open('lp2019.json','r',encoding='utf_8_sig')
     logging.info('log232: %r \n', id_rec)
-    l = text.split()
-    fl = True
-    sum = 0
+    l=text.split()
+    fl=True
+    sum=0
 
     for stroka in json.load(jsonfile):
-        # Если название препарата есть в списке сказанных слов
+        #Если название препарата есть в списке сказанных слов
         if stroka['MNN'] in l:
-            logging.info('log242: %r \n', stroka['MNN'])
-            # удаляем пробелы, меняем запятые на точки
-            sum += float(stroka['Price'].replace(' ', '').replace(',', '.'))
-            # пишем новую строчку в базу
-            product = [(None, stroka["Barcode"], id_rec, stroka['MNN'],
-                        stroka['Count'], stroka['Price'], stroka['ReleaseForm'], text)]
-            cursor.executemany("INSERT INTO recipe_product VALUES (?,?,?,?,?,?,?,?)", product)
-            conn.commit()
-            # удаляем название препарата
-            l.remove(stroka['MNN'])
-            fl = False
+                logging.info('log242: %r \n', stroka['MNN'])
+                #удаляем пробелы, меняем запятые на точки
+                sum+=float(stroka['Price'].replace(' ','').replace(',','.'))
+                #пишем новую строчку в базу
+                product = [(None, stroka["Barcode"],id_rec, stroka['MNN'],
+                stroka['Count'], stroka['Price'],stroka['ReleaseForm'],text)]
+                cursor.executemany("INSERT INTO recipe_product VALUES (?,?,?,?,?,?,?,?)", product)
+                conn.commit()
+                #удаляем название препарата
+                l.remove(stroka['MNN'])
+                fl=False
     if fl:
         logging.info('log254: %r \n', fl)
-        answer = ['Не знаю такого лекарства. Может подорожник?',
-                  'Не знаком с таким препаратом. Повторите, пожалуйста!',
-                  'Не расслышал название препарата. Давайте поцелую и всё пройдёт!']
-        response = random.choice(answer)
+        answer=['Не знаю такого лекарства. Может подорожник?',
+            'Не знаком с таким препаратом. Повторите, пожалуйста!',
+            'Не расслышал название препарата. Давайте поцелую и всё пройдёт!']
+        response=random.choice(answer)
         return response
     else:
         logging.info('log261: %r \n', fl)
-        response = ('Сумма вашего заказа ориентировочно ' + str(sum * 1.1))
+        response=('Сумма вашего заказа ориентировочно '+str(sum*1.1))
     return response
 
 
 def pwr(text):
-    return text + "d"
+    return text+"d"
 
 
 def add(text, user_id, database):
-    return text + "r"
+    return text+"r"
 
 
 def call_func(text, user_id, database, func, dispatcher):

@@ -256,6 +256,6 @@ def find_medicine(text, guid_prov, database):
 def call_func(text, user_id, database, func, dispatcher):
     try:
         return dispatcher[func](text, user_id, database)
-    except:
-        logging.exception('')
+    except Exception as e:
+        logging.error('Error at %s', 'division', exc_info=e)
         return logging.exception('')

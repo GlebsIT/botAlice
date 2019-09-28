@@ -257,12 +257,12 @@ def pwr(text):
     return text+"d"
 
 
-def add(text):
+def add(text, user_id, database):
     return text+"r"
 
 
 def call_func(text, user_id, database, func, dispatcher):
     try:
-        return dispatcher[func](text)
+        return dispatcher[func](text, user_id, database)
     except:
         return "Invalid function"

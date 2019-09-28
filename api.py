@@ -52,9 +52,9 @@ def handle_dialog(req, res):
     session_id = req['session']['session_id']
     message_id = req['session']['message_id']
     request = req['request']['original_utterance'].lstrip()
-    database = "project.db"
-    response = 'ok';
-    button = '';
+    database = "../gosyslyga/project.db"
+    response = 'ok'
+    button = ''
     id_parents = ''
     id_skill = ''
 

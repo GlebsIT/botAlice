@@ -89,8 +89,8 @@ def handle_dialog(req, res):
     res['response']['text'] = response
 
     if command != '':
-        dispatcher = {'add': add}
-        res['response']['text'] = call_func("hi", 'add', dispatcher)
+        dispatcher = {command : command}
+        res['response']['text'] = call_func(request, user_id, database, command, dispatcher)
 
     # Создание кнопок
     res['response']['buttons'] = get_suggests(user_id)
@@ -258,9 +258,8 @@ def add(text):
     return text+"r"
 
 
-
-def call_func(text, func, dispatcher):
+def call_func(text, user_id, database, func, dispatcher):
     try:
-        return dispatcher[func](text)
+        return dispatcher[func](text, user_id, database)
     except:
         return "Invalid function"

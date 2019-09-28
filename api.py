@@ -226,7 +226,7 @@ def find_medicine(text, guid_prov, conn, database):
     #возвращаем id_rec из таблицы id_recipe
     id_rec=cursor.fetchall()[-1][0]
     with open("lp2019.json", "rb") as f:
-        jsonfile = f.read().decode("UTF-8")
+        jsonfile = f.read().decode("utf_8_sig")
     l=text.split()
     fl=True
     sum=0

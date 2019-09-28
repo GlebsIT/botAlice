@@ -227,9 +227,9 @@ def find_medicine(text, guid_prov, database):
     cursor = conn.cursor()
     sql="SELECT id_recipe FROM recipe"
     cursor.execute(sql)
-    return "ok"
     #возвращаем id_rec из таблицы id_recipe
     id_rec=cursor.fetchall()[-1][0]
+    return "ok"
     jsonfile=open('lp2019.json','r',encoding='utf_8_sig')
     l=text.split()
     fl=True

@@ -89,10 +89,9 @@ def handle_dialog(req, res):
     res['response']['text'] = response
 
     if command != '':
-        #dispatcher = {command: command,}
-        dispatcher = {'pwr': pwr, 'add': add}
-        logging.info('command: %r \n',command)
-        logging.info('dispatcher: %r \n', dispatcher)
+        dispatcher = {'find_medicine': find_medicine, "add_recipe": add_recipe}
+        #logging.info('command: %r \n',command)
+        #logging.info('dispatcher: %r \n', dispatcher)
         res['response']['text'] = call_func(request, user_id, database, command, dispatcher)
 
     # Создание кнопок

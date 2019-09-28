@@ -90,7 +90,7 @@ def handle_dialog(req, res):
 
     if command != '':
         dispatcher = {command: command}
-        logging.info('command: %r \n',command )
+        logging.info('command: %r \n',command)
         logging.info('dispatcher: %r \n', dispatcher)
         res['response']['text'] = call_func(request, user_id, database, command, dispatcher)
 
@@ -262,6 +262,6 @@ def add(text):
 
 def call_func(text, user_id, database, func, dispatcher):
     try:
-        return dispatcher[func](text, user_id, database)
+        return dispatcher[func](text)
     except:
         return "Invalid function"

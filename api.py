@@ -78,7 +78,7 @@ def handle_dialog(req, res):
         #logging.info('button: %r \n', button)
         id_skill = str(skill[2])
         logging.info('skill: %r \n', skill)
-        command = skill[3]
+        #command = skill[3]
         logging.info('commanda: %r \n', command)
 
     sessionStorage[user_id] = {

@@ -58,6 +58,7 @@ def handle_dialog(req, res):
     id_skill = ''
     commanda = ''
     database = "../gosyslyga/project.db"
+    logging.info('work: %r \n', "work")
 
     conn = create_connection(database)
     message = [user_id, req['session']['message_id'], req['session']['session_id'],

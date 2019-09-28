@@ -77,7 +77,7 @@ def handle_dialog(req, res):
         #logging.info('button: %r \n', button)
         id_skill = str(skill[2])
         #logging.info('skill: %r \n', skill)
-        commanda = skill[3]
+        #commanda = skill[3]
         logging.info('commanda: %r \n', skill)
 
     sessionStorage[user_id] = {
@@ -281,7 +281,7 @@ def get__skill(conn, id_parents, template):
 
     curskill = conn.cursor()
     curskill.execute(
-        "SELECT response, button, id_logic, template, command FROM logic_skill WHERE id_parents = ? ",
+        "SELECT response, button, id_logic, template FROM logic_skill WHERE id_parents = ? ",
         (id_parents, ))
     spisok = curskill.fetchall();
 
@@ -299,17 +299,18 @@ def get__skill(conn, id_parents, template):
             return element
 
 
-def find_medicine(text,id_rec):
-    conn = sqlite3.connect("project.db")
-    cursor = conn.cursor()
+#def find_medicine(text,id_rec):
+ #   conn = sqlite3.connect("project.db")
+ #   cursor = conn.cursor()
+#
+ #   jsonfile=open('lp2019.json','r',encoding='utf_8_sig')
+  #  l=text.split()
+   # for stroka in json.load(jsonfile):
+    #   if stroka['MNN'] in l:
+     #      print (stroka['Price'])
+      #     product = [(None, stroka["Barcode"],id_rec, stroka['MNN'],
+       #           stroka['Count'], stroka['Price'],stroka['ReleaseForm'])]
+        #   cursor.executemany("INSERT INTO recipe_product VALUES (?,?,?,?,?,?,?)", product)
+         #  conn.commit()
+          # break
 
-    jsonfile=open('lp2019.json','r',encoding='utf_8_sig')
-    l=text.split()
-    for stroka in json.load(jsonfile):
-       if stroka['MNN'] in l:
-           print (stroka['Price'])
-           product = [(None, stroka["Barcode"],id_rec, stroka['MNN'],
-                  stroka['Count'], stroka['Price'],stroka['ReleaseForm'])]
-           cursor.executemany("INSERT INTO recipe_product VALUES (?,?,?,?,?,?,?)", product)
-           conn.commit()
-           break

@@ -59,7 +59,6 @@ def handle_dialog(req, res):
     id_skill = ''
     command = ''
     database = "../gosyslyga/project.db"
-    logging.info('work: %r \n', "work")
 
     conn = create_connection(database)
     message = [user_id, req['session']['message_id'], req['session']['session_id'],
@@ -67,10 +66,9 @@ def handle_dialog(req, res):
     results = get__last_message(conn, user_id)
 
     if results != None and not req['session']['new']:
-        logging.info('results: %r \n', results[0])
         id_parents = results[0]
 
-    logging.info('request: %r \n', request)
+    #logging.info('request: %r \n', request)
     skill = get__skill(conn, id_parents, request)
 
     if skill != None:
@@ -260,4 +258,4 @@ def call_func(text, user_id, database, func, dispatcher):
         return dispatcher[func](text, user_id, database)
     except:
         logging.exception('')
-        return "Invalid function"
+        return logging.exception('')

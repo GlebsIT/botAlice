@@ -222,45 +222,44 @@ def add_recipe(text, guid_prov, database):
 
 
 def find_medicine(text, guid_prov, database):
-
     conn = sqlite3.connect(database)
     cursor = conn.cursor()
-    sql="SELECT id_recipe FROM recipe"
+    sql = "SELECT id_recipe FROM recipe"
     cursor.execute(sql)
-    #возвращаем id_rec из таблицы id_recipe
-    id_rec=cursor.fetchall()[-1][0]
+    # возвращаем id_rec из таблицы id_recipe
+    id_rec = cursor.fetchall()[-1][0]
 
-    jsonfile=open('lp2019.json','r',encoding='utf_8_sig')
+    jsonfile = open('lp2019.json', 'r', encoding='utf_8_sig')
     logging.info('log232: %r \n', id_rec)
-    l=text.split()
-    fl=True
-    sum=0
+    l = text.split()
+    fl = True
+    sum = 0
 
     for stroka in json.load(jsonfile):
-        #Если название препарата есть в списке сказанных слов
+        # Если название препарата есть в списке сказанных слов
         if stroka['MNN'] in l:
-                logging.info('log242: %r \n', stroka['MNN'])
-                #удаляем пробелы, меняем запятые на точки
-                sum+=float(stroka['Price'].replace(' ','').replace(',','.'))
-                #пишем новую строчку в базу
-                product = [(None, stroka["Barcode"],id_rec, stroka['MNN'],
-                stroka['Count'], stroka['Price'],stroka['ReleaseForm'],text)]
-                cursor.executemany("INSERT INTO recipe_product VALUES (?,?,?,?,?,?,?,?)", product)
-                conn.commit()
-                #удаляем название препарата
-                l.remove(stroka['MNN'])
-                fl=False
+            logging.info('log242: %r \n', stroka['MNN'])
+            # удаляем пробелы, меняем запятые на точки
+            sum += float(stroka['Price'].replace(' ', '').replace(',', '.'))
+            # пишем новую строчку в базу
+            product = [(None, stroka["Barcode"], id_rec, stroka['MNN'],
+                        stroka['Count'], stroka['Price'], stroka['ReleaseForm'], text)]
+            cursor.executemany("INSERT INTO recipe_product VALUES (?,?,?,?,?,?,?,?)", product)
+            conn.commit()
+            # удаляем название препарата
+            l.remove(stroka['MNN'])
+            fl = False
     if fl:
         logging.info('log254: %r \n', fl)
-        answer=['Не знаю такого лекарства. Может подорожник?',
-            'Не знаком с таким препаратом. Повторите, пожалуйста!',
-            'Не расслышал название препарата. Давайте поцелую и всё пройдёт!']
-        response=random.choice(answer)
+        answer = ['Не знаю такого лекарства. Может подорожник?',
+                  'Не знаком с таким препаратом. Повторите, пожалуйста!',
+                  'Не расслышал название препарата. Давайте поцелую и всё пройдёт!']
+        response = random.choice(answer)
         return response
     else:
         logging.info('log261: %r \n', fl)
-        response=('Сумма вашего заказа ориентировочно '+str(sum*1.1))
-    return response
+        response = ('Сумма вашего заказа ориентировочно ' + str(sum * 1.1))
+    return "rok_test"
 
 
 def pwr(text):

@@ -231,7 +231,7 @@ def find_medicine(text, guid_prov, database):
     id_rec=cursor.fetchall()[-1][0]
 
     jsonfile=open('lp2019.json','r',encoding='utf_8_sig')
-    return "ok"
+
     l=text.split()
     fl=True
     sum=0
@@ -254,6 +254,7 @@ def find_medicine(text, guid_prov, database):
             'Не знаком с таким препаратом. Повторите, пожалуйста!',
             'Не расслышал название препарата. Давайте поцелую и всё пройдёт!']
         response=random.choice(answer)
+        return response
     else:
         response=('Сумма вашего заказа ориентировочно '+str(sum*1.1))
     return response

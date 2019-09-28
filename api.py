@@ -228,7 +228,7 @@ def find_medicine(text, guid_prov, conn, database):
     id_rec=cursor.fetchall()[-1][0]
     with open("lp2019.json", "rb") as f:
         jsonfile = f.read().decode("utf_8_sig")
-    l= string.strip(text.lower().split())
+    l= text.lower().split().replace('.', '')
     fl=True
     sum=0
     for stroka in json.loads(jsonfile):

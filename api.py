@@ -17,7 +17,6 @@ logging.basicConfig(filename="sample.log", level=logging.DEBUG)
 
 # Хранилище данных о сессиях.
 sessionStorage = {}
-database = "../gosyslyga/project.db"
 
 
 # Задаем параметры приложения Flask.
@@ -58,6 +57,7 @@ def handle_dialog(req, res):
     id_parents = ''
     id_skill = ''
     commanda = ''
+    database = "../gosyslyga/project.db"
 
     conn = create_connection(database)
     message = [user_id, req['session']['message_id'], req['session']['session_id'],

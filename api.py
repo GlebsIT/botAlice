@@ -17,6 +17,7 @@ logging.basicConfig(filename="sample.log", level=logging.DEBUG)
 
 # Хранилище данных о сессиях.
 sessionStorage = {}
+database = "../gosyslyga/project.db"
 
 
 # Задаем параметры приложения Flask.
@@ -52,7 +53,6 @@ def handle_dialog(req, res):
     session_id = req['session']['session_id']
     message_id = req['session']['message_id']
     request = req['request']['original_utterance'].lstrip()
-    database = "../gosyslyga/project.db"
     response = 'ok'
     button = ''
     id_parents = ''
@@ -294,3 +294,19 @@ def get__skill(conn, id_parents, template):
         logging.info('element[3_2]: %r \n', element[3])
         if template in element[3]:
             return element
+
+
+def find_medicine(text,id_rec):
+    conn = sqlite3.connect("project.db")
+    cursor = conn.cursor()
+
+    jsonfile=open('lp2019.json','r',encoding='utf_8_sig')
+    l=text.split()
+    for stroka in json.load(jsonfile):
+       if stroka['MNN'] in l:
+           print (stroka['Price'])
+           product = [(None, stroka["Barcode"],id_rec, stroka['MNN'],
+                  stroka['Count'], stroka['Price'],stroka['ReleaseForm'])]
+           cursor.executemany("INSERT INTO recipe_product VALUES (?,?,?,?,?,?,?)", product)
+           conn.commit()
+           break

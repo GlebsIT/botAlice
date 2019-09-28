@@ -222,11 +222,12 @@ def add_recipe(text, guid_prov, database):
 
 
 def find_medicine(text, guid_prov, database):
-    return "ok"
+
     conn = sqlite3.connect(database)
     cursor = conn.cursor()
     sql="SELECT id_recipe FROM recipe"
     cursor.execute(sql)
+    return "ok"
     #возвращаем id_rec из таблицы id_recipe
     id_rec=cursor.fetchall()[-1][0]
     jsonfile=open('lp2019.json','r',encoding='utf_8_sig')

@@ -8,6 +8,7 @@ import json
 import logging
 import sqlite3
 import random
+import string
 
 # Импортируем подмодули Flask для запуска веб-сервиса.
 from flask import Flask, request
@@ -227,12 +228,12 @@ def find_medicine(text, guid_prov, conn, database):
     id_rec=cursor.fetchall()[-1][0]
     with open("lp2019.json", "rb") as f:
         jsonfile = f.read().decode("utf_8_sig")
-    l=text.split()
+    l= string.strip(text.lower().split())
     fl=True
     sum=0
     for stroka in json.loads(jsonfile):
         #Если название препарата есть в списке сказанных слов
-            if stroka['MNN'] in l:
+            if stroka['MNN'].lower() in l:
                #удаляем пробелы, меняем запятые на точки
                sum+=float(stroka['Price'].replace(' ','').replace(',','.'))
                #пишем новую строчку в базу

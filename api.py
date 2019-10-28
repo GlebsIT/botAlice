@@ -118,6 +118,8 @@ def get_suggests(user_id):
     for suggest in session['suggests']:
         if suggest != '':
             suggests.append({'title': suggest, 'hide': True})
+        elif suggest == 'карта':
+                suggests.append({'title': suggest, 'hide': True, 'url':'https://yandex.ru/maps/240/togliatti/?ll=49.311828%2C53.529022&mode=search&oid=1756966869&ol=biz&z=18'})
 
     logging.info('suggests: %r \n', suggests)
     return suggests

@@ -234,7 +234,7 @@ def find_medicine(text, guid_prov, conn, database):
     for stroka in json.loads(jsonfile):
         #Если название препарата есть в списке сказанных слов
             if stroka['MNN'].lower() in l or stroka['TorgName'].lower() in l:
-               naznachenie += stroka['MNN']+' '
+               naznachenie += stroka['TorgName']+' '
                #удаляем пробелы, меняем запятые на точки
                sum+=float(stroka['Price'].replace(' ','').replace(',','.'))
                #пишем новую строчку в базу

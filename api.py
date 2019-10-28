@@ -209,7 +209,6 @@ def get__skill(conn, id_parents, template):
         if template in element[3]:
             return element
 
-
 #авторизуем врача (guid_prov) и пациента (text - номер полиса)
 def add_recipe(text, guid_prov, conn, database):
     with conn:

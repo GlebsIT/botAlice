@@ -238,8 +238,8 @@ def find_medicine(text, guid_prov, conn, database):
                #удаляем пробелы, меняем запятые на точки
                sum+=float(stroka['Price'].replace(' ','').replace(',','.'))
                #пишем новую строчку в базу
-               product = [(None, stroka["Barcode"],id_rec, stroka['MNN'],
-                      stroka['Count'], stroka['Price'],stroka['ReleaseForm'],text)]
+               product = [(None, "Barcode",id_rec, stroka['MNN'],
+                      "Count", stroka['Price'],"ReleaseForm",text)]
                cursor.executemany("INSERT INTO recipe_product VALUES (?,?,?,?,?,?,?,?)", product)
                conn.commit()
                #удаляем название препарата

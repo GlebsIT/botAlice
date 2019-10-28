@@ -243,7 +243,10 @@ def find_medicine(text, guid_prov, conn, database):
                cursor.executemany("INSERT INTO recipe_product VALUES (?,?,?,?,?,?,?,?)", product)
                conn.commit()
                #удаляем название препарата
-               l.remove(stroka['MNN'].lower())
+               if stroka['MNN'].lower() in l:
+                   l.remove(stroka['MNN'].lower())
+               elif stroka['TorgName'].lower() in l:
+                   l.remove(stroka['TorgName'].lower())
                fl=False
     if fl:
         answer=['Не знаю такого лекарства. Может подорожник?',
